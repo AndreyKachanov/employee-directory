@@ -1,4 +1,5 @@
-Проект развернут на сайте employees.andreiikachanov.com
+# Онлайн каталог сотрудников
+Проект развернут на сайте <a href="http://employees.andreiikachanov.com">employees.andreiikachanov.com</a> 
 
 Для выполнения использовался фреймворк Symfony 3.4.9
 
@@ -6,7 +7,7 @@
 
 2) Базовые стили созданы с помощью css фреймворка Bootstrap 4.
 
-2) На странице <a href="">Employees</a> выводится общий список всех сотрудников.
+2) На странице <a href="http://employees.andreiikachanov.com/admin">Employees</a> выводится общий список всех сотрудников.
 
 3) Добавлена возможность сортировать сотрудников по любому полю без перезагрузки страницы, с помощью библиотеки jquery.tablesorter.
 
