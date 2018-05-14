@@ -1,0 +1,54 @@
+{% extends 'base.html.twig' %}
+{% block title %}Edit employee - {{ employee.name }}{% endblock %}
+{% block body %}
+    {{ parent() }}
+
+        <h3 class="text-center">Edit employee - {{ employee.name }}</h3>
+        <div class="wrapper">
+           <div class="container">
+                <div>
+                    {{ form_start(form) }}
+                        <div class="form-group">
+                            {{ form_label(form.name) }}
+                            {{ form_widget(form.name) }}
+                            {{ form_errors(form.name) }}
+                        </div>
+                        <div class="form-group">
+                            {{ form_label(form.position) }}
+                            {{ form_widget(form.position) }}
+                            {{ form_errors(form.position) }}
+                        </div>
+                        <div class="form-group">
+                            {{ form_label(form.salary) }}
+                            {{ form_widget(form.salary) }}
+                            {{ form_errors(form.salary) }}
+                        </div>
+                        <div class="form-group">
+                            {{ form_label(form.employmantDate) }}
+                            {{ form_widget(form.employmantDate) }}
+                            {{ form_errors(form.employmantDate) }}
+                        </div>
+                        <div class="form-group">
+                            {{ form_label(form.parent) }}
+                            {{ form_widget(form.parent) }}
+                            {{ form_errors(form.parent) }}
+                        </div>
+                        <div class="form-group">
+                            {{ form_label(form.image) }}
+                        <div>
+                             <img class="edit-image" src="{{ asset('uploads/employees/') }}{{ employee.image  ?? 'no-image.png' }}" alt="">
+                        </div>
+                            {{ form_widget(form.image) }}
+                            {{ form_errors(form.image) }}
+                        </div>
+                        <div class="form-group">
+                            <div>
+                                 <button class="btn btn-dark" type="submit">Save</button>
+                                 <a class="btn btn-dark" href="{{ path('admin_index') }}">Cancel</a>
+                            </div>
+                        </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+{% endblock %}

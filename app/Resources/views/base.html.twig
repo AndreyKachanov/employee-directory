@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>{% block title %}Hierarchy of employees{% endblock %}</title>
+        {% block stylesheets %}{% endblock %}
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+        <link rel="stylesheet" href="{{ asset('libs/bootstrap/dist/css/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('css/main.css') }}">
+    </head>
+    <body>
+        {% block body %}
+
+            <div class="wrapper">
+                <div class="container">
+                    <nav aria-label="breadcrumb">
+                        {{ wo_render_breadcrumbs({ itemClass: 'breadcrumb-item'}) }}
+                    </nav>
+                </div>
+            </div>
+
+        {% endblock %}
+        {% block javascripts %}
+            <script src="{{ asset('libs/jquery/dist/jquery.min.js') }}"></script>
+            <script src="{{ asset('libs/bootstrap/dist/js/bootstrap.min.js') }}"></script>
+            <script src="{{ asset('libs/tablesorter/dist/js/jquery.tablesorter.min.js') }}"></script>
+        {% endblock %}
+    </body>
+</html>

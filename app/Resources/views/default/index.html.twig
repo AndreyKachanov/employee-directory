@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('libs/jstree/dist/themes/default/style.min.css') }}">
+{% endblock %}
+
+{% block body %}
+    <div class="wrapper">
+        <div class="container main-page">
+            <ul class="nav justify-content-start">
+                <li class="nav-item">
+                    <a class="nav-link active" href="{{ path('admin_index') }}">Employees</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" target="_blank" href="http://andreiikachanov.com">Author</a>
+                </li>
+            </ul>
+            <div class="row">
+                <div class="col">
+                    <h3 class="text-center">Hierarchy of employees</h3>
+                    <div id="the_tree"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script src="{{ asset('libs/jstree/dist/jstree.min.js') }}"></script>
+
+    <script>
+        $('#the_tree').jstree({
+            'core' : {
+                'data' : {
+                    'url' : "{{ path('search_child') }}",
+                    'data' : function (node) {
+                        return { 'id' : node.id };
+                    }
+                }
+            },
+
+        }).bind("select_node.jstree", function (e, data) {
+
+
+           // console.log(data);
+        }).on('open_node.jstree', function (e, data) {
+            //
+            // var id = data.node.id;
+            // var salary = data.node.original.salary;
+            // var emp_date = data.node.original.emp_date;
+            //
+            // var div = '<div class="node-item"> Salary - ' + salary + '; Employmant date - '+ emp_date +'.</div>';
+            //
+            // $(div).insertAfter('#' + id + '_anchor');
+        });
+    </script>
+{% endblock %}

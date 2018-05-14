@@ -1,0 +1,152 @@
+body {
+    font: 15px Arial, sans-serif;
+}
+.wrapper {
+    margin: 20px 0;
+}
+.main-page {
+    margin-top: 50px;
+    /*border: 1px solid red;*/
+    min-height: 80vh;
+}
+.search-wrap {
+    position: relative;
+}
+
+.search-wrap button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100%;
+    border: none;
+    border-bottom-right-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+a.asc {
+    background-image: url(../images/asc.gif);
+    background-repeat: no-repeat;
+    background-position: -6px 7px;
+    padding-left: 10px;
+    color: #37474f;
+}
+
+a.desc {
+    background-image: url(../images/desc.gif);
+    background-repeat: no-repeat;
+    background-position: -6px 7px;
+    padding-left: 10px;
+    color: #37474f;
+}
+
+a.sortable {
+    background-image: url(../images/bg.gif);
+    background-repeat: no-repeat;
+    background-position: -6px 4px;
+    padding-left: 10px;
+    color: #37474f;
+}
+
+.table {
+    margin-top: 30px;
+}
+
+.form-group label {
+    font-weight: bold;
+}
+
+.form-group ul {
+    margin: 8px 0 0 0;
+    padding: 0;
+}
+.form-group ul li {
+    margin-top: 5px;
+    font-size: 14px;
+    color: red;
+    list-style: none;
+}
+
+.separator {
+    display: none;
+}
+
+.edit-image {
+    width: 150px;
+    height: 150px;
+    margin: 15px 0;
+}
+
+.modal-dialog,
+.modal-content {
+    height: 70%;
+}
+
+.modal-body {
+    max-height: calc(100% - 120px);
+    overflow-y: scroll;
+}
+
+.modal-body p {
+    font-size: 15px;
+    font-family: Arial, sans-serif;
+}
+#parent-employee {
+    font-weight: bold;
+}
+
+.img-list {
+    width: 50px;
+    height: 50px;
+}
+
+#search-input::-webkit-search-cancel-button {
+    position:relative;
+    right: 0px;
+    height: 15px;
+    width: 15px;
+    display: inline-block;
+    background: blue;
+}
+
+.empl-list-h3 {
+    margin-top: 30px;
+    width: 100%;
+    text-align: center;
+}
+
+.login-form {
+    margin-top: 150px;
+}
+
+.navigation ul {
+    margin-bottom: 40px;
+}
+
+.node-item {
+    position: absolute;
+    left: 300px;
+    color: #4caf50;
+    font-style: italic;
+    font-size: 14px;
+    width: 200px;
+    margin-left: 50px;
+    /*display: block;*/
+}
+
+.jstree-default .jstree-themeicon {
+    background-position: -4px -70px !important;
+}
+
+.node-name {
+    width: 300px;
+}
+
+.jstree-anchor {
+    display: inline-block;
+    width: 100%;
+    position: relative;
+}
+
+#the_tree {
+    margin-top: 40px;
+}

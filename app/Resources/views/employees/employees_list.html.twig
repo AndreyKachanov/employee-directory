@@ -1,0 +1,211 @@
+{% extends 'base.html.twig' %}
+{% block title %} All employees {% endblock %}
+{% block body %}
+    {{ parent() }}
+
+        <div class="container">
+
+            <nav class="navbar navbar-light bg-light">
+                <a class="btn btn-primary btn-sm" href="{{ path('admin_employee_new') }}">New employee</a>
+                <form class="form-inline" id="search-form">
+                    <input class="form-control mr-sm-2" id="search-input" type="search" name="q" placeholder="Search...">
+                    <button id="search-btn" class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                </form>
+            </nav>
+
+            <div class="row" id="row-table">
+                {% if employees|length > 0 %}
+                    <table class="table" id="myTable">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th class="sortable">{{ knp_pagination_sortable(employees, 'Name', ['e.name']) }}</th>
+                            <th class="sortable">{{ knp_pagination_sortable(employees, 'Position', ['p.name']) }}</th>
+                            <th class="sortable">{{ knp_pagination_sortable(employees, 'Emp. date', ['e.employmantDate']) }}</th>
+                            <th class="sortable">{{ knp_pagination_sortable(employees, 'Salary', ['e.salary']) }}</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for e in employees %}
+                            <tr>
+                                <td>
+                                    <img class="img-list" src="{{ asset('uploads/employees/') }}{{ e.image  ?? 'no-image.png' }}" alt="">
+                                </td>
+                                <td>{{ e.name }}</td>
+                                <td>{{ e.position.name }}</td>
+                                <td>{{ e.employmantDate|date('Y-m-d') }}</td>
+                                <td>{{ e.salary }}</td>
+                                <td>
+                                    {% if e.position.getName != 'General director' %}
+                                        <a href="{{ path('admin_employee_edit', {'id': e.id}) }}">Edit</a>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if e.position.getName != 'General director' %}
+                                        <a class="delete-employee"
+                                           data-id="{{ e.id }}"
+                                           data-subordinates-count="{{ path('count_subordinates', {'id': e.id}) }}"
+                                           href="{{ path('admin_employee_delete', {'id': e.id}) }}">Delete
+                                        </a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <div class="navigation container" id="pagination">
+                        <div class="row">
+                            {{ knp_pagination_render(employees) }}
+                        </div>
+                    </div>
+                {% else %}
+                    <h3 class="empl-list-h3">Employees not found.</h3>
+                {% endif %}
+
+            </div>
+        </div>
+
+    <!-- Modal window  -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalCenterTitle">Remove employee</h5>
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                </div>
+                <div class="modal-body">
+                    <p>This employee has <strong><span id="count-posts"></span></strong> subordinates.</p>
+                    <p>After remove they will be subordinated to the employee <span id="parent-employee"></span></p>
+                    <div id="parent-employee"><strong></strong></div>
+                    <div id="subordinates-ajax"></div>
+                    <div>Subordinates list:</div>
+                    <div id="employees"></div>
+                </div>
+                <div class="modal-footer">
+                    <form id="category" action="{{ path('admin_employee_delete') }}" method="post">
+                        <button class="btn btn-primary" type="submit" name="action">Assign
+                        </button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <input id="deleted-category" type="hidden" name="delete">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script>
+
+        $(document).ready(() => {
+
+            // ajax сортировка колонок таблицы
+            $("#myTable").tablesorter( {selectorHeaders: 'thead th.sortable'} );
+
+            $("#search-form").submit(function(e) {
+                e.preventDefault();
+
+                var searchText = $("#search-input").val();
+                var searchUrl = "{{ path('ajax_search_employee') }}";
+
+                if (searchText.length > 0) {
+                    $.ajax({
+                        type: 'POST',
+                        url: searchUrl,
+                        dataType: 'json',
+                        data: {s: searchText.trim()},
+
+                        success: function(result) {
+
+                            if (result.jsondata == 'not_found') {
+                                $('#row-table').html('<h3 class="empl-list-h3">Employees not found.</h3>');
+                            } else {
+                                if (result.json.length > 0) {
+                                    $('#myTable tbody').empty();
+                                    var json = result.json;
+                                    var tr;
+
+                                    for (var i = 0; i < json.length; i++) {
+                                        tr = $('<tr/>');
+
+                                        var id = json[i].id;
+
+                                        var urlEdit = "{{ path('admin_employee_edit', {'id': 'employee_id'}) }}";
+                                        var urlDelete =  "{{ path('admin_employee_delete', {'id': 'employee_id'}) }}";
+                                        var dataSubCount = "{{ path('count_subordinates', {'id': 'employee_id'}) }}";
+
+                                        urlEdit = urlEdit.replace("employee_id", id);
+                                        urlDelete = urlDelete.replace("employee_id", id);
+                                        dataSubCount = dataSubCount.replace('employee_id', id);
+
+                                        tr.append("<td><img class='img-list' src='" + "{{ asset('uploads/employees/') }}" +  json[i].image + "'></td>");
+                                        tr.append("<td>" + json[i].name + "</td>");
+                                        tr.append("<td>" + json[i].position + "</td>");
+                                        tr.append("<td>" + json[i].employmantDate + "</td>");
+                                        tr.append("<td>" + json[i].salary + "</td>");
+
+                                        if (json[i].parent != 'no_parent') {
+                                        tr.append("<td><a href='"+ urlEdit  +"'>Edit</a></td>");
+                                        tr.append("<td><a data-subordinates-count=" + dataSubCount +" class='delete-employee' data-id="+id+" href='"+ urlDelete  +"'>Delete</a></td>");
+                                        }
+
+                                        $('#myTable').append(tr);
+                                        $("#myTable").trigger("update");
+                                    }
+
+                                    $('#pagination').empty();
+                                    // $("#myTable").tablesorter( {selectorHeaders: 'thead th.sortable'} );
+                                }
+
+
+                            }
+
+                        },
+                        error: function (xhr, ajaxOptions, thrownError) { // в случae нeудaчнoгo зaвeршeния зaпрoсa к сeрвeру
+                            alert(xhr.status); // пoкaжeм oтвeт сeрвeрa
+                            alert(thrownError); // и тeкст oшибки
+                        },
+                    });
+                }
+
+                $('#search-input').on('input', function(e) {
+                    if('' == this.value) {
+                        window.location.reload();
+                    }
+                });
+            });
+
+            $('#myTable').on('click', '.delete-employee', function (e) {
+                e.preventDefault();
+                $('#employees').empty();
+
+                var countPostUrl = $(this).data('subordinatesCount');
+                var categoryId = $(this).data('id');
+
+                $.post(countPostUrl)
+                    .done(function (data) {
+                        console.log(data);
+                        if (data === false) {
+                            window.location.reload();
+                        } else {
+                            $('#count-posts').text(data.countSubordinates);
+                            var list = '<ul><li>' + data.subordinates.join('</li><li>') + '</li></ul>';
+                            $('#employees').append(list);
+
+                            $('#parent-employee').text(data.parent);
+                            $('#deleted-category').val(categoryId);
+                            $('#myModal').modal();
+                        }
+                    });
+
+            });
+
+        });
+
+    </script>
+{% endblock %}
